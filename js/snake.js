@@ -11,13 +11,12 @@ function Snake(speed, position){
     this.image.onload = function(){
        this.ready = true;
     }
-    this.isAlive = true;
+    this.isDead = false;
     this.part = [];
     this.dimension = INT_SNAKE_DIM;
 
     this.move = function(x, y, modifier){
-        var distance = 10;
-        if(Math.abs(x - this.position.x)>10 || Math.abs(y - this.position.y)>10) {
+        if(Math.abs(x - this.position.x)>this.speed || Math.abs(y - this.position.y)>this.speed) {
 
             for (var i = this.part.length - 1; i > 0; i--) {
                 this.part[i].position.x = this.part[i - 1].position.x;
@@ -29,11 +28,23 @@ function Snake(speed, position){
                 this.part[0].position.y = this.position.y;
             }
 
-            if(Math.abs(x - this.position.x)>distance) {
-                this.position.x = this.position.x < x ? this.position.x + distance : this.position.x == x ? x : this.position.x - distance;
+            var distance = Math.sqrt(Math.pow(Math.abs(x - this.position.x),2) + Math.pow(Math.abs(y - this.position.y),2));
+            var xPlus = Math.abs(x - this.position.x)*this.speed/distance;
+            var yPlus = Math.abs(y - this.position.y)*this.speed/distance;
+
+            if(Math.abs(x - this.position.x)>this.speed) {
+                this.position.x = this.position.x < x ? this.position.x + xPlus : this.position.x == x ? x : this.position.x - xPlus;
             }
-            if(Math.abs(y - this.position.y)>distance) {
-                this.position.y = this.position.y < y ? this.position.y + distance : this.position.y == y ? y : this.position.y - distance;
+            if(Math.abs(y - this.position.y)>this.speed) {
+                this.position.y = this.position.y < y ? this.position.y + yPlus : this.position.y == y ? y : this.position.y - yPlus;
+            }
+
+            if(this.position.x > 800){
+                this.position.x = 0;
+            }
+
+            if(this.position.y > 600){
+                this.position.y = 0;
             }
 
         }
@@ -43,8 +54,25 @@ function Snake(speed, position){
         this.length += 1;
     }
 
-    this.die = function(){
-        this.isAlive = false;
+    this.checkDead = function(map){
+        //Check collision with snake part
+        for (var i = this.part.length - 1; i > -1; i--) {
+            var xDistance = Math.abs(this.position.x - this.part[i].position.x) - this.dimension.x;
+            var yDistance = Math.abs(this.position.y - this.part[i].position.y) - this.dimension.y;
+            if(xDistance < -10 && yDistance < -10){
+                this.isDead = true;
+                break;
+            }
+        }
+        //Check collision with rock
+        for (var i = map.things.length - 1; i > -1; i--) {
+            var xDistance = Math.abs(this.position.x - map.things[i].position.x) - this.dimension.x;
+            var yDistance = Math.abs(this.position.y - map.things[i].position.y) - this.dimension.y;
+            if(xDistance < 0 && yDistance < 0){
+                this.isDead = true;
+                break;
+            }
+        }
     }
 }
 

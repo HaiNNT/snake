@@ -6,8 +6,8 @@
     //Init canvas
     var canvas = document.createElement("canvas");
     var ctx = canvas.getContext("2d");
-    canvas.width = 800;
-    canvas.height = 600;
+    canvas.width = INT_MAP_WIDTH;
+    canvas.height = INT_MAP_HEIGHT;
     document.body.appendChild(canvas);
 
     //Declare variables
@@ -15,11 +15,16 @@
     var map = new Map();
     map.things.push(new Rock(new Position(200, 400)));
     map.things.push(new Rock(new Position(500, 400)));
-    var snake = new Snake(10, new Position(400, 300));
+    var snake = new Snake(INT_SNAKE_SPEED, new Position(400, 300));
     snake.part.push(new snakePart(new Position(390, 300)));
+    snake.part.push(new snakePart(new Position(385, 300)));
     snake.part.push(new snakePart(new Position(380, 300)));
+    snake.part.push(new snakePart(new Position(375, 300)));
     snake.part.push(new snakePart(new Position(370, 300)));
+    snake.part.push(new snakePart(new Position(365, 300)));
     snake.part.push(new snakePart(new Position(360, 300)));
+    snake.part.push(new snakePart(new Position(355, 300)));
+    snake.part.push(new snakePart(new Position(350, 300)));
 
     var mouse = {x: 0, y: 0};
 
@@ -37,6 +42,11 @@
     //Update all component's status
     function update(){
         snake.move(mouse.x, mouse.y,modifier);
+        snake.checkDead(map);
+        if(snake.isDead){
+            clearInterval(mainInterval);
+            clearInterval(renderInterval);
+        }
     }
 
     // Draw everything
@@ -61,7 +71,7 @@
         var now = Date.now();
         var delta = now - then;
         modifier = delta / 1000;
-        update();
+            update();
         then = now;
 
     };
@@ -70,7 +80,7 @@
     reset();
     var then = Date.now();
 
-    setInterval(render, 1); // Execute as fast as possible
-    setInterval(main, 200);
+   var renderInterval = setInterval(render, 1); // Execute as fast as possible
+   var mainInterval = setInterval(main, 100);
 
 })()
