@@ -56,16 +56,16 @@ function Snake(speed, position){
 
     this.checkDead = function(map){
         //Check collision with snake part
-        for (var i = this.part.length - 1; i > -1; i--) {
+        for (var i = 1; i < this.part.length; i++) {
             var xDistance = Math.abs(this.position.x - this.part[i].position.x) - this.dimension.x;
             var yDistance = Math.abs(this.position.y - this.part[i].position.y) - this.dimension.y;
-            if(xDistance < -10 && yDistance < -10){
+            if(xDistance < -1 && yDistance < -1){
                 this.isDead = true;
                 break;
             }
         }
         //Check collision with rock
-        for (var i = map.things.length - 1; i > -1; i--) {
+        for (var i = 0; i < map.things.length; i++) {
             var xDistance = Math.abs(this.position.x - map.things[i].position.x) - this.dimension.x;
             var yDistance = Math.abs(this.position.y - map.things[i].position.y) - this.dimension.y;
             if(xDistance < 0 && yDistance < 0){

@@ -41,11 +41,19 @@
 
     //Update all component's status
     function update(){
-        snake.move(mouse.x, mouse.y,modifier);
+        snake.checkDead(map);
+            if(!snake.isDead) {
+                snake.move(mouse.x, mouse.y, modifier);
+            }
+
+    }
+
+    function checkDead(){
         snake.checkDead(map);
         if(snake.isDead){
             clearInterval(mainInterval);
             clearInterval(renderInterval);
+            //clearInterval(checkDeadInterval);
         }
     }
 
@@ -54,13 +62,13 @@
         if (map.ready) {
             ctx.drawImage(map.background, 0, 0);
             for(var i = 0; i < map.things.length; i++){
-                ctx.drawImage(map.things[i].image, map.things[i].position.x, map.things[i].position.y);
+                ctx.drawImage(map.things[i].image, map.things[i].position.x - (map.things[i].dimension.x/2), map.things[i].position.y - (map.things[i].dimension.y/2));
             }
         }
         if(snake.ready){
-            ctx.drawImage(snake.image, snake.position.x, snake.position.y);
+            ctx.drawImage(snake.image, snake.position.x - (snake.dimension.x/2), snake.position.y - (snake.dimension.y/2));
             for(var i = 0; i < snake.part.length; i++){
-                ctx.drawImage(snake.part[i].image, snake.part[i].position.x, snake.part[i].position.y);
+                ctx.drawImage(snake.part[i].image, snake.part[i].position.x - (snake.part[i].dimension.x/2), snake.part[i].position.y - (snake.part[i].dimension.y/2));
             }
         }
     }
@@ -81,6 +89,7 @@
     var then = Date.now();
 
    var renderInterval = setInterval(render, 1); // Execute as fast as possible
-   var mainInterval = setInterval(main, 100);
+   var mainInterval = setInterval(main, 200);
+  // var checkDeadInterval = setInterval(checkDead,1);
 
 })()
